@@ -30,6 +30,7 @@ dependencies {
 
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile group: 'org.json', name: 'json', version: '20160810'
 
     compile "org.apache.commons:commons-csv:1.5"
 

@@ -1,3 +1,5 @@
+package sheetastic.sheets;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -76,10 +78,41 @@ public class UploadIt {
         expectedSheet.addRow(new String[]{"4","5","6"});
 
         Assert.assertEquals(expectedSheet.getRows(),sheet.getRows());
+    }
 
+    @Test
+    public void uploadCsvWithEmptyBits() throws UnirestException {
+        String csv = String.join(
+                "\n",
+                Arrays.asList(
+                        "a,,b,c,,,",
+                        ",,,,,,,",
+                        "4,,5,6,,",
+                        ",,,,,,,"
+                )
+        );
 
+        Assert.assertEquals(0, sheetRepository.findAll().size());
 
+        HttpResponse<JsonNode> response = Unirest.post(rootUri + "/sheets")
+                .header("content-type", "text/csv")
+                .body(csv)
+                .asJson();
 
+        List<Sheet> sheets = sheetRepository.findAll();
+
+        Assert.assertEquals(1, sheets.size());
+
+        Sheet sheet = sheets.get(0);
+
+        Assert.assertNotNull(sheet);
+        Assert.assertNotNull(sheet.getId());
+
+        Sheet expectedSheet = new Sheet();
+        expectedSheet.addRow(new String[]{"a","","b","c"}).setHeader(true);
+        expectedSheet.addRow(new String[]{"4","","5","6"});
+
+        Assert.assertEquals(expectedSheet.getRows(),sheet.getRows());
     }
 
 }

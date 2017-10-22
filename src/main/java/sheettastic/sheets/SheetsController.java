@@ -24,17 +24,35 @@ public class SheetsController {
     @NonNull
     private SheetRepository sheetRepository;
 
+    @NonNull
+    private SheetHelper sheetHelper;
+
     @RequestMapping(path = "sheets", method = RequestMethod.POST, consumes = {"text/csv"})
     public ResponseEntity<Sheet> uploadCsv(InputStream inputStream) throws IOException {
 
         Sheet sheet = csvStreamToSheetConverter.convert(inputStream);
 
+        sheetHelper.beforeCreate(sheet);
+
         sheetRepository.insert(sheet);
+
 
         ResponseEntity<Sheet> responseEntity = new ResponseEntity<Sheet>(sheet, HttpStatus.CREATED);
 
         return responseEntity;
     }
 
+
+    /**
+     * Consider a command approach here (instead of REST)
+     *
+     * user commands:
+     *  - change header row
+     *  - ignore column
+     *  - ignore row
+     *  - set this column to that mapping
+     *  - change template
+     *
+     */
 
 }
