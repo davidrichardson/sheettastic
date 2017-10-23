@@ -9,5 +9,5 @@ import java.util.UUID;
  * Created by Dave on 21/10/2017.
  */
 @RepositoryRestResource
-public interface SheetRepository extends MongoRepository<Sheet,UUID> {
+public interface SheetRepository extends MongoRepository<Sheet,String> {
 }

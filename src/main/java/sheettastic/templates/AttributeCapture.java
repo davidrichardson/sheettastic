@@ -13,7 +13,7 @@ import java.text.MessageFormat;
 @Builder
 public class AttributeCapture implements Capture {
 
-    private String columnName;
+    private String displayName;
 
     @NonNull
     @Builder.Default
@@ -21,6 +21,9 @@ public class AttributeCapture implements Capture {
 
     @Builder.Default
     private String termsFieldName = "attributes";
+
+    @Builder.Default
+    private boolean required = false;
 
     @Override
     public int capture(int position, String[] headers, String[] values, JSONObject document) {

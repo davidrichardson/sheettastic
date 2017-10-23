@@ -47,7 +47,7 @@ public class SheetsController {
      * Consider a command approach here (instead of REST)
      *
      * user commands:
-     *  - change header row
+     *  - change header row (
      *  - ignore column
      *  - ignore row
      *  - set this column to that mapping

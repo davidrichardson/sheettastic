@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
+import sheettastic.templates.Capture;
 
 import java.util.*;
 
@@ -18,12 +19,11 @@ public class Sheet {
 
     public void fillInId() {
         Assert.isNull(this.id);
-        id = UUID.randomUUID();
+        id = UUID.randomUUID().toString();
     }
 
     @Id
-    private UUID id;
-
+    private String id;
     private Integer headerRowIndex;
 
     @Version
@@ -31,6 +31,7 @@ public class Sheet {
 
     @NonNull
     private List<Row> rows = new LinkedList<>();
+
 
     public Row addRow(String[] row) {
         return this.addRow(new Row(row));

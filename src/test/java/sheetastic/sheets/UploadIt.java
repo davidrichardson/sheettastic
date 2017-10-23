@@ -109,7 +109,8 @@ public class UploadIt {
         Assert.assertNotNull(sheet.getId());
 
         Sheet expectedSheet = new Sheet();
-        expectedSheet.addRow(new String[]{"a","","b","c"}).setHeader(true);
+        expectedSheet.setHeaderRowIndex(0);
+        expectedSheet.addRow(new String[]{"a","","b","c"});
         expectedSheet.addRow(new String[]{"4","","5","6"});
 
         Assert.assertEquals(expectedSheet.getRows(),sheet.getRows());
