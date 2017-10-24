@@ -1,0 +1,29 @@
+{
+  "targetType": "samples",
+  "columnCaptures": [
+    {
+      "displayName": "alias",
+      "type": "field",
+      "fieldName": "alias",
+      "fieldType": "String"
+    },
+    {
+      "displayName": "taxon id",
+      "type": "field",
+      "fieldName": "taxonId",
+      "fieldType": "IntegerNumber"
+    },
+    {
+      "displayName": "taxon",
+      "type": "field",
+      "fieldName": "taxon",
+      "fieldType": "String"
+    }
+  ],
+  "defaultCapture": {
+    "type": "attribute",
+    "allowUnits": true,
+    "allowTerms": true
+  }
+}
+

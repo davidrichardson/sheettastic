@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
 import sheettastic.templates.Capture;
+import sheettastic.templates.Template;
 
 import java.util.*;
 
@@ -17,10 +18,7 @@ import java.util.*;
 @Data
 public class Sheet {
 
-    public void fillInId() {
-        Assert.isNull(this.id);
-        id = UUID.randomUUID().toString();
-    }
+    private Template template; //could be a ref rather than concrete
 
     @Id
     private String id;
@@ -31,6 +29,8 @@ public class Sheet {
 
     @NonNull
     private List<Row> rows = new LinkedList<>();
+
+    private List<Capture> mappings = new ArrayList<>();
 
 
     public Row addRow(String[] row) {

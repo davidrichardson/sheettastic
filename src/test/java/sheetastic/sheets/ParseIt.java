@@ -40,7 +40,8 @@ public class ParseIt {
         expected.addRow(new String[]{"a","b","c"});
         expected.addRow(new String[]{"1","2","3"});
 
-        Sheet actual = csvStreamToSheetConverter.convert(inputStream);
+        Sheet actual = new Sheet();
+        csvStreamToSheetConverter.convert(actual,inputStream);
 
         Assert.assertEquals(expected,actual);
         System.out.println(actual);

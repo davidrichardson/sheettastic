@@ -15,13 +15,12 @@ import java.util.List;
 @Component
 public class CsvStreamToSheetConverter {
 
-    public Sheet convert(InputStream inputStream) throws IOException {
+    public void convert(Sheet sheet, InputStream inputStream) throws IOException {
 
 
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
         Reader in = new InputStreamReader(inputStream);
-        Sheet sheet = new Sheet();
 
         CSVParser csvParser = CSVFormat.EXCEL.parse(in);
 
@@ -33,7 +32,6 @@ public class CsvStreamToSheetConverter {
             sheet.addRow(row);
         }
 
-        return sheet;
     }
 
 

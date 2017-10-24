@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import sheettastic.templates.Template;
+import sheettastic.templates.TemplateRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,10 +29,19 @@ public class SheetsController {
     @NonNull
     private SheetHelper sheetHelper;
 
+    @NonNull
+    private TemplateRepository templateRepository;
+
     @RequestMapping(path = "sheets", method = RequestMethod.POST, consumes = {"text/csv"})
     public ResponseEntity<Sheet> uploadCsv(InputStream inputStream) throws IOException {
 
-        Sheet sheet = csvStreamToSheetConverter.convert(inputStream);
+        Template template = templateRepository.fetchById("samples");
+
+        Sheet sheet = new Sheet();
+        sheet.setTemplate(template);
+        csvStreamToSheetConverter.convert(sheet, inputStream);
+
+        sheet.setTemplate(template);
 
         sheetHelper.beforeCreate(sheet);
 

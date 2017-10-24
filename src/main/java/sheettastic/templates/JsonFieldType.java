@@ -5,7 +5,7 @@ import org.json.JSONObject;
 /**
  * Created by Dave on 18/10/2017.
  */
-public enum JsonType {
+public enum JsonFieldType {
 
     String,
     IntegerNumber,
