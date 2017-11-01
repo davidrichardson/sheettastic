@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by Dave on 21/10/2017.
@@ -17,11 +18,9 @@ public class CsvStreamToSheetConverter {
 
     public void convert(Sheet sheet, InputStream inputStream) throws IOException {
 
-
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
         Reader in = new InputStreamReader(inputStream);
-
         CSVParser csvParser = CSVFormat.EXCEL.parse(in);
 
 
@@ -33,8 +32,6 @@ public class CsvStreamToSheetConverter {
         }
 
     }
-
-
 
 
 }

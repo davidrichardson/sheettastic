@@ -59,6 +59,8 @@ public class SheetHelper {
         Map<String,Capture> columnCaptures = sheet.getTemplate().capturesByColumnName();
         Optional<Capture> defaultCapture = Optional.of(sheet.getTemplate().getDefaultCapture());
 
+        if (sheet.getHeaderRowIndex() == null ) return;
+
         List<String> headerRow = sheet.getRows().get( sheet.getHeaderRowIndex() ).getCells();
 
         Capture[] emptyCaptures = new Capture[headerRow.size()];

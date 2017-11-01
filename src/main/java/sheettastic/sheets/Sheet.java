@@ -1,5 +1,6 @@
 package sheettastic.sheets;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
@@ -31,6 +32,12 @@ public class Sheet {
     private List<Row> rows = new LinkedList<>();
 
     private List<Capture> mappings = new ArrayList<>();
+
+    @JsonIgnore
+    public List<Row> getFirstRows(){
+        int limit = Math.min( 3 +headerRowIndex, rows.size());
+        return rows.subList(headerRowIndex+1,limit);
+    }
 
 
     public Row addRow(String[] row) {

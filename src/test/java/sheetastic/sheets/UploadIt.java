@@ -19,6 +19,7 @@ import sheettastic.App;
 import sheettastic.sheets.Sheet;
 import sheettastic.sheets.SheetRepository;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,11 +50,17 @@ public class UploadIt {
 
     @Test
     public void uploadCsv() throws UnirestException {
+        _uploadCsv();
+    }
+
+    private Sheet _uploadCsv() throws UnirestException {
         String csv = String.join(
                 "\n",
                 Arrays.asList(
                         "a,b,c",
-                        "4,5,6"
+                        "4,5,6",
+                        "d,e,f",
+                        "x,y,z"
                 )
         );
 
@@ -74,11 +81,26 @@ public class UploadIt {
         Assert.assertNotNull(sheet.getId());
 
         Sheet expectedSheet = new Sheet();
-        expectedSheet.addRow(new String[]{"a","b","c"});
-        expectedSheet.addRow(new String[]{"4","5","6"});
+        expectedSheet.addRow(new String[]{"a", "b", "c"});
+        expectedSheet.addRow(new String[]{"4", "5", "6"});
+        expectedSheet.addRow(new String[]{"d", "e", "f"});
+        expectedSheet.addRow(new String[]{"x", "y", "z"});
 
-        Assert.assertEquals(expectedSheet.getRows(),sheet.getRows());
+        Assert.assertEquals(expectedSheet.getRows(), sheet.getRows());
+
+        return sheet;
     }
+
+    @Test
+    public void testProjection() throws UnirestException {
+        Sheet sheet = _uploadCsv();
+
+        String url = MessageFormat.format("{0}/sheets/{1}?projection=truncatedColumns", rootUri, sheet.getId());
+
+        HttpResponse<JsonNode> response = Unirest.get(url).asJson();
+        System.out.println(response.getBody().toString());
+    }
+
 
     @Test
     public void uploadCsvWithEmptyBits() throws UnirestException {
@@ -110,10 +132,10 @@ public class UploadIt {
 
         Sheet expectedSheet = new Sheet();
         expectedSheet.setHeaderRowIndex(0);
-        expectedSheet.addRow(new String[]{"a","","b","c"});
-        expectedSheet.addRow(new String[]{"4","","5","6"});
+        expectedSheet.addRow(new String[]{"a", "", "b", "c"});
+        expectedSheet.addRow(new String[]{"4", "", "5", "6"});
 
-        Assert.assertEquals(expectedSheet.getRows(),sheet.getRows());
+        Assert.assertEquals(expectedSheet.getRows(), sheet.getRows());
     }
 
 }
