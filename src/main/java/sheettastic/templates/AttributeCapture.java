@@ -59,13 +59,13 @@ public class AttributeCapture implements Capture {
 
     @Override
     public int capture(int position, List<String> headers, List<String> values, JSONObject document) {
-        JSONArray attributes = ensureArray(document, ATTRIBUTES_FIELD_NAME);
-
-        JSONObject attribute = new JSONObject();
-        attributes.put(attribute);
+        JSONObject attributes = ensureObject(document, ATTRIBUTES_FIELD_NAME);
 
         String name = headers.get(position);
-        attribute.put("name",name);
+        JSONArray valuesArray = ensureArray(attributes,name);
+
+        JSONObject attribute = new JSONObject();
+        valuesArray.put(attribute);
 
         String value = values.get(position);
         attribute.put("value",value);
@@ -111,6 +111,16 @@ public class AttributeCapture implements Capture {
         }
 
         return document.getJSONArray(arrayFieldName);
+
+    }
+
+    private JSONObject ensureObject(JSONObject document,String objectFieldName) {
+
+        if (!document.has(objectFieldName)){
+            document.put(objectFieldName, new JSONObject());
+        }
+
+        return document.getJSONObject(objectFieldName);
 
     }
 

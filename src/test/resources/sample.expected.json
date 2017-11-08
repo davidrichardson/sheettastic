@@ -1,0 +1,13 @@
+{
+  "alias": "a sample",
+  "attributes": {
+    "weight": [
+      {
+        "value": "75",
+        "units": "kg"
+      }
+    ]
+  },
+  "taxonId": 9606,
+  "taxon": "Homo sapiens"
+}
