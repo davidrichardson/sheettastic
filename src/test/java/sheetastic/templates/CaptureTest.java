@@ -38,16 +38,19 @@ public class CaptureTest {
 
     @Before
     public void before() {
-        template = new Template("samples");
+        template = Template.builder().name("samples").targetType("samples").build();
         template
                 .add(
-                        FieldCapture.builder().displayName("alias").fieldName("alias").build()
+                        "alias",
+                        FieldCapture.builder().fieldName("alias").build()
                 )
                 .add(
-                        FieldCapture.builder().displayName("taxon id").fieldName("taxonId").fieldType(JsonFieldType.IntegerNumber).build()
+                        "taxon id",
+                        FieldCapture.builder().fieldName("taxonId").fieldType(JsonFieldType.IntegerNumber).build()
                 )
                 .add(
-                        FieldCapture.builder().displayName("taxon").fieldName("taxon").build()
+                        "taxon",
+                        FieldCapture.builder().fieldName("taxon").build()
                 );
 
         template.setDefaultCapture(

@@ -1,25 +1,23 @@
 {
+  "name": "samples",
   "targetType": "samples",
-  "columnCaptures": [
-    {
-      "displayName": "alias",
+  "columnCaptures": {
+    "alias": {
       "type": "field",
       "fieldName": "alias",
       "fieldType": "String"
     },
-    {
-      "displayName": "taxon id",
+    "taxon id": {
       "type": "field",
       "fieldName": "taxonId",
       "fieldType": "IntegerNumber"
     },
-    {
-      "displayName": "taxon",
+    "taxon": {
       "type": "field",
       "fieldName": "taxon",
       "fieldType": "String"
     }
-  ],
+  },
   "defaultCapture": {
     "type": "attribute",
     "allowUnits": true,

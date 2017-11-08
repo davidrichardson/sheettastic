@@ -5,6 +5,7 @@ import lombok.NonNull;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import sheettastic.templates.Template;
@@ -32,10 +33,10 @@ public class SheetsController {
     @NonNull
     private TemplateRepository templateRepository;
 
-    @RequestMapping(path = "sheets", method = RequestMethod.POST, consumes = {"text/csv"})
-    public ResponseEntity<Sheet> uploadCsv(InputStream inputStream) throws IOException {
+    @RequestMapping(path = "sheets/{templateName}", method = RequestMethod.POST, consumes = {"text/csv"})
+    public ResponseEntity<Sheet> uploadCsv(@PathVariable String templateName,  InputStream inputStream) throws IOException {
 
-        Template template = templateRepository.fetchById("samples");
+        Template template = templateRepository.fetchById(templateName);
 
         Sheet sheet = new Sheet();
         sheet.setTemplate(template);

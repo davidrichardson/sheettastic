@@ -1,37 +1,49 @@
 package sheettastic.templates;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
+@Builder(toBuilder = true)
 public class Template {
 
     @NonNull
+    private String name;
+
     private String targetType;
 
-    private List<Capture> columnCaptures = new ArrayList<>();
+    @Builder.Default
+    private Map<String, Capture> columnCaptures = new CaseInsensitiveMap();
 
     private Capture defaultCapture;
 
-    public Template add(Capture capture) {
-        columnCaptures.add(capture);
+    public Template add(String columnName, Capture capture) {
+        columnCaptures.put(columnName, capture);
         return this;
     }
 
-    public Map<String,Capture> capturesByColumnName(){
-        Map<String,Capture> capturesByColumnName = new LinkedHashMap<>();
+    private static class CaseInsensitiveMap extends LinkedHashMap<String, Capture> {
 
-        columnCaptures
-                .forEach(capture -> capturesByColumnName.put(
-                        capture.getDisplayName().trim().toLowerCase(),
-                        capture)
-                );
+        public Capture get(Object key) {
+            return super.get(mungeKey(key));
+        }
 
-        return capturesByColumnName;
+        public Capture put(String key, Capture value) {
+            return super.put(mungeKey(key), value);
+        }
+
+        @Override
+        public boolean containsKey(Object key) {
+            return super.containsKey(mungeKey(key));
+        }
+
+        private static String mungeKey(Object key) {
+            return key.toString().toLowerCase();
+        }
+
+
     }
 }

@@ -22,8 +22,6 @@ public class AttributeCapture implements Capture {
     private static final String ATTRIBUTES_FIELD_NAME = "attributes";
     private static final String TERMS_FIELD_NAME = "terms";
 
-    private String displayName;
-
     @Builder.Default
     private boolean required = false;
 
@@ -66,9 +64,10 @@ public class AttributeCapture implements Capture {
         JSONObject attribute = new JSONObject();
         attributes.put(attribute);
 
-        String value = values.get(position);
+        String name = headers.get(position);
+        attribute.put("name",name);
 
-        attribute.put("name",this.getDisplayName());
+        String value = values.get(position);
         attribute.put("value",value);
 
         return parseDependentColumns(position,headers,values,attribute);

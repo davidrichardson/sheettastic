@@ -19,8 +19,6 @@ public class FieldCapture implements Capture {
         return this.toBuilder().build();
     }
 
-    private String displayName;
-
     @NonNull
     private String fieldName;
 

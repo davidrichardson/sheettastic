@@ -56,7 +56,7 @@ public class SheetHelper {
      * @param sheet
      */
     public void mapHeadings(Sheet sheet){
-        Map<String,Capture> columnCaptures = sheet.getTemplate().capturesByColumnName();
+        Map<String,Capture> columnCaptures = sheet.getTemplate().getColumnCaptures();
         Optional<Capture> defaultCapture = Optional.of(sheet.getTemplate().getDefaultCapture());
 
         if (sheet.getHeaderRowIndex() == null ) return;
