@@ -39,7 +39,7 @@ public class TemplateRepository {
     }
 
     private Template sample() {
-        Template sampleTemplate = base("sample");
+        Template sampleTemplate = base("samples");
 
 
         sampleTemplate
@@ -54,7 +54,7 @@ public class TemplateRepository {
     }
 
     private Template protocol() {
-        return base("protocol");
+        return base("protocols");
     }
 
 

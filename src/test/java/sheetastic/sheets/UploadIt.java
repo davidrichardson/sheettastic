@@ -66,7 +66,7 @@ public class UploadIt {
 
         Assert.assertEquals(0, sheetRepository.findAll().size());
 
-        HttpResponse<JsonNode> response = Unirest.post(rootUri + "/sheets")
+        HttpResponse<JsonNode> response = Unirest.post(rootUri + "/sheets/samples")
                 .header("content-type", "text/csv")
                 .body(csv)
                 .asJson();
@@ -116,7 +116,7 @@ public class UploadIt {
 
         Assert.assertEquals(0, sheetRepository.findAll().size());
 
-        HttpResponse<JsonNode> response = Unirest.post(rootUri + "/sheets")
+        HttpResponse<JsonNode> response = Unirest.post(rootUri + "/sheets/samples")
                 .header("content-type", "text/csv")
                 .body(csv)
                 .asJson();
