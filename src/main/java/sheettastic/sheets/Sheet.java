@@ -32,6 +32,7 @@ public class Sheet {
     private List<Row> rows = new LinkedList<>();
 
     private List<Capture> mappings = new ArrayList<>();
+    private String sheetName;
 
     @JsonIgnore
     public List<Row> getFirstRows(){

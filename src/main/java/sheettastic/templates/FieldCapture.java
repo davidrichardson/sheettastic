@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NonNull;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,5 +44,10 @@ public class FieldCapture implements Capture {
         this.setCaptureInList(position,captures,headers.get(position));
 
         return ++position;
+    }
+
+    @Override
+    public List<String> expectedColumnHeaders() {
+        return Collections.EMPTY_LIST;
     }
 }

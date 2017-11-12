@@ -5,7 +5,7 @@ import lombok.Data;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -20,7 +20,12 @@ public class AttributeCapture implements Capture {
     }
 
     private static final String ATTRIBUTES_FIELD_NAME = "attributes";
+    private static final String UNITS_FIELD_NAME = "units";
     private static final String TERMS_FIELD_NAME = "terms";
+    private static final String UNITS_COLUMN_NAME = "units";
+    private static final String TERMS_COLUMN_NAME = "terms";
+    private static final String URL_FIELD_NAME = "url";
+
 
     @Builder.Default
     private boolean required = false;
@@ -43,10 +48,10 @@ public class AttributeCapture implements Capture {
             position = headerIterator.nextIndex();
             String header = headerIterator.next().trim().toLowerCase();
 
-            if (allowUnits && header.equals("units")){
+            if (allowUnits && header.toLowerCase().equals(UNITS_COLUMN_NAME)){
                 //next
             }
-            else if (allowTerms && header.equals("term")){
+            else if (allowTerms && header.toLowerCase().equals(TERMS_COLUMN_NAME)){
                 //next
             }
             else{
@@ -73,6 +78,19 @@ public class AttributeCapture implements Capture {
         return parseDependentColumns(position,headers,values,attribute);
     }
 
+    @Override
+    public List<String> expectedColumnHeaders() {
+        List<String> columnHeaders = new ArrayList<>();
+
+        if(allowUnits){
+            columnHeaders.add(UNITS_COLUMN_NAME);
+        }
+        if (allowTerms){
+            columnHeaders.add(TERMS_COLUMN_NAME);
+        }
+
+        return columnHeaders;
+    }
 
     private int parseDependentColumns(int position, List<String> headers, List<String> values, JSONObject attribute){
         position++;
@@ -81,15 +99,13 @@ public class AttributeCapture implements Capture {
             String header = headers.get(position).trim().toLowerCase();
             String value = values.get(position);
 
-            System.out.println(MessageFormat.format("pos {0} h {1} v {2}",position,header,value));
-
-            if (header.equals( "units")){
-                attribute.put("units",value);
+             if (header.toLowerCase().equals( UNITS_COLUMN_NAME)){
+                attribute.put(UNITS_FIELD_NAME,value);
             }
-            else if (header.equals("term")){
+            else if (header.toLowerCase().equals(TERMS_COLUMN_NAME)){
                 JSONArray terms = ensureArray(attribute, TERMS_FIELD_NAME);
                 JSONObject term = new JSONObject();
-                term.put("url",value);
+                term.put(URL_FIELD_NAME,value);
                 terms.put(term);
             }
             else {

@@ -25,4 +25,6 @@ public interface Capture {
         captures.set(position,cap);
     }
 
+    List<String> expectedColumnHeaders();
+
 }
