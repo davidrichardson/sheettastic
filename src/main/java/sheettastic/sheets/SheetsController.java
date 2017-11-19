@@ -79,8 +79,8 @@ public class SheetsController {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                })
-                .forEach(sample -> sampleRepo.save(sample));
+                }) //ENSURE Aliases set
+                .forEach(sample -> sampleRepo.save(sample)); //BEFORE SAVE, AFTER SAVE LIFECYCLE
 
         return new ResponseEntity(HttpStatus.CREATED);
 
