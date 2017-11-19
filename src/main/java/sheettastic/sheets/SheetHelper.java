@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 import sheettastic.templates.Capture;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Component
 public class SheetHelper {
@@ -29,10 +30,10 @@ public class SheetHelper {
 
     public void fillInId(Sheet sheet) {
         Assert.isNull(sheet.getId());
-        sheet.setId( UUID.randomUUID().toString() );
+        sheet.setId(UUID.randomUUID().toString());
     }
 
-    public void ignoreCommentLines(Sheet sheet){
+    public void ignoreCommentLines(Sheet sheet) {
         sheet.getRows().stream().filter(row -> isfirstCharHash(row)).forEach(row -> row.setIgnored(true));
     }
 
@@ -41,16 +42,16 @@ public class SheetHelper {
             return false;
         }
 
-        if (row.getCells() == null){
+        if (row.getCells() == null) {
             return false;
         }
 
-        if (row.getCells().size() < 1){
+        if (row.getCells().size() < 1) {
             return false;
         }
 
         String cellValue = row.getCells().get(0);
-        if (cellValue.startsWith("#")){
+        if (cellValue.startsWith("#")) {
             return true;
         }
         return false;
@@ -59,6 +60,7 @@ public class SheetHelper {
 
     /**
      * Picks a header row in the sheet
+     *
      * @param sheet
      */
     public void guessHeader(Sheet sheet) {
@@ -66,7 +68,7 @@ public class SheetHelper {
 
         ListIterator<Row> rowIterator = sheet.getRows().listIterator();
 
-        while(rowIterator.hasNext()){
+        while (rowIterator.hasNext()) {
             int rowIndex = rowIterator.nextIndex();
             Row row = rowIterator.next();
 
@@ -81,20 +83,21 @@ public class SheetHelper {
 
     /**
      * Must have data and a valid row picked
+     *
      * @param sheet
      */
-    public void mapHeadings(Sheet sheet){
-        Map<String,Capture> columnCaptures = sheet.getTemplate().getColumnCaptures();
-        columnCaptures.entrySet().stream().forEach( entry ->
-                entry.getValue().setDisplayName( entry.getKey())
+    public void mapHeadings(Sheet sheet) {
+        Map<String, Capture> columnCaptures = sheet.getTemplate().getColumnCaptures();
+        columnCaptures.entrySet().stream().forEach(entry ->
+                entry.getValue().setDisplayName(entry.getKey())
         );
 
 
         Optional<Capture> defaultCapture = Optional.of(sheet.getTemplate().getDefaultCapture());
 
-        if (sheet.getHeaderRowIndex() == null ) return;
+        if (sheet.getHeaderRowIndex() == null) return;
 
-        List<String> headerRow = sheet.getRows().get( sheet.getHeaderRowIndex() ).getCells();
+        List<String> headerRow = sheet.getRows().get(sheet.getHeaderRowIndex()).getCells();
 
         Capture[] emptyCaptures = new Capture[headerRow.size()];
 
@@ -103,24 +106,22 @@ public class SheetHelper {
 
         int position = 0;
 
-        while (position < headerRow.size()){
+        while (position < headerRow.size()) {
 
             String currentHeader = headerRow.get(position);
             currentHeader = currentHeader.trim().toLowerCase();
 
 
-            if (columnCaptures.containsKey(currentHeader)){
+            if (columnCaptures.containsKey(currentHeader)) {
                 Capture capture = columnCaptures.get(currentHeader);
 
-                position = capture.map(position,capturePositions,headerRow);
-            }
-            else if (defaultCapture.isPresent()){
+                position = capture.map(position, capturePositions, headerRow);
+            } else if (defaultCapture.isPresent()) {
                 Capture clonedCapture = defaultCapture.get().copy();
                 clonedCapture.setDisplayName(currentHeader);
 
-                position = clonedCapture.map(position,capturePositions,headerRow);
-            }
-            else {
+                position = clonedCapture.map(position, capturePositions, headerRow);
+            } else {
                 position++;
             }
 
@@ -129,33 +130,35 @@ public class SheetHelper {
         sheet.setMappings(capturePositions);
     }
 
-    public List<JSONObject> parse(Sheet sheet){
+    public Stream<JSONObject> parse(Sheet sheet) {
 
-        List<String> headers = sheet.getRows().get( sheet.getHeaderRowIndex() ).getCells();
-        ListIterator<Row> rowIterator = sheet.getRows().listIterator( sheet.getHeaderRowIndex() + 1 );
+        List<String> headers = sheet.getRows().get(sheet.getHeaderRowIndex()).getCells();
 
-        ListIterator<Capture> captureIterator = sheet.getMappings().listIterator();
+        List<Row> rows = sheet.getRows();
 
-        List<JSONObject> documents = new ArrayList<>();
+        List<Row> rowsToParse = rows.subList(sheet.getHeaderRowIndex()+1,rows.size() - 1);
 
-        while(rowIterator.hasNext()){
-            JSONObject document = new JSONObject();
-            documents.add(document);
 
-            Row row = rowIterator.next();
-            List<String> cells = row.getCells();
+        return rowsToParse.stream()
+                .filter(row -> !row.isIgnored())
+                .map(row -> {
+                    JSONObject document = new JSONObject();
 
-            while(captureIterator.hasNext()){
-                int position = captureIterator.nextIndex();
-                Capture capture = captureIterator.next();
+                    List<String> cells = row.getCells();
 
-                if (capture != null) {
-                    capture.capture(position, headers, cells, document);
-                }
-            }
-        }
+                    ListIterator<Capture> captureIterator = sheet.getMappings().listIterator();
 
-        return documents;
+                    while (captureIterator.hasNext()) {
+                        int position = captureIterator.nextIndex();
+                        Capture capture = captureIterator.next();
+
+                        if (capture != null) {
+                            capture.capture(position, headers, cells, document);
+                        }
+                    }
+
+                    return document;
+                });
     }
 
 }

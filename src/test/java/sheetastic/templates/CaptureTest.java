@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -98,7 +99,7 @@ public class CaptureTest {
         JSONObject expected = new JSONObject(expectedSampleJson);
 
         sheetHelper.beforeCreate(sheet);
-        List<JSONObject> jsonObjects = sheetHelper.parse(sheet);
+        List<JSONObject> jsonObjects = sheetHelper.parse(sheet).collect(Collectors.toList());
 
 
         JSONObject actual = jsonObjects.get(0);

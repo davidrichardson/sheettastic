@@ -104,6 +104,15 @@ public class UploadIt {
         System.out.println(response.getBody().toString());
     }
 
+    @Test
+    public void testConversion() throws UnirestException {
+        Sheet sheet = _uploadCsv();
+        String url = MessageFormat.format("{0}/sheets/{1}/convert", rootUri, sheet.getId());
+
+        HttpResponse<JsonNode> response = Unirest.post(url).asJson();
+        System.out.println(response.getBody().toString());
+    }
+
 
     @Test
     public void uploadCsvWithEmptyBits() throws UnirestException {

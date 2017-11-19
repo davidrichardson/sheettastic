@@ -1,13 +1,19 @@
 package sheettastic.sheets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NonNull;
+import org.json.JSONObject;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import sheettastic.samples.Sample;
+import sheettastic.samples.SampleRepo;
 import sheettastic.templates.Template;
 import sheettastic.templates.TemplateRepository;
 
@@ -33,8 +39,14 @@ public class SheetsController {
     @NonNull
     private TemplateRepository templateRepository;
 
-    @RequestMapping(path = "sheets/{templateName}", method = RequestMethod.POST, consumes = {"text/csv"})
-    public ResponseEntity<Sheet> uploadCsv(@PathVariable String templateName,  InputStream inputStream) throws IOException {
+    @NonNull
+    private SampleRepo sampleRepo;
+
+    @NonNull
+    private ObjectMapper objectMapper;
+
+    @RequestMapping(path = "/sheets/{templateName}", method = RequestMethod.POST, consumes = {"text/csv"})
+    public ResponseEntity<Sheet> uploadCsv(@PathVariable String templateName, InputStream inputStream) throws IOException {
 
         Template template = templateRepository.fetchById(templateName);
 
@@ -49,9 +61,29 @@ public class SheetsController {
         sheetRepository.insert(sheet);
 
 
-        ResponseEntity<Sheet> responseEntity = new ResponseEntity<Sheet>(sheet, HttpStatus.CREATED);
+        ResponseEntity<Sheet> responseEntity = new ResponseEntity<>(sheet, HttpStatus.CREATED);
 
         return responseEntity;
+    }
+
+    @RequestMapping(path = "/sheets/{sheetId}/convert", method = RequestMethod.POST)
+    public ResponseEntity convertSample(@PathVariable String sheetId)  {
+
+        Sheet sheet = sheetRepository.findOne(sheetId);
+
+        sheetHelper.parse(sheet)
+                .map(JSONObject::toString)
+                .map(json -> {
+                    try {
+                        return objectMapper.readValue(json, Sample.class);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .forEach(sample -> sampleRepo.save(sample));
+
+        return new ResponseEntity(HttpStatus.CREATED);
+
     }
 
 
