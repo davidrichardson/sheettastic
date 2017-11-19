@@ -60,7 +60,8 @@ public class UploadIt {
                         "a,b,c",
                         "4,5,6",
                         "d,e,f",
-                        "x,y,z"
+                        "x,y,z",
+                        "#this is a comment,a,b,c,d"
                 )
         );
 
@@ -85,6 +86,8 @@ public class UploadIt {
         expectedSheet.addRow(new String[]{"4", "5", "6"});
         expectedSheet.addRow(new String[]{"d", "e", "f"});
         expectedSheet.addRow(new String[]{"x", "y", "z"});
+        expectedSheet.addRow(new String[]{"#this is a comment", "a", "b", "c", "d"});
+        expectedSheet.getRows().get(4).setIgnored(true);
 
         Assert.assertEquals(expectedSheet.getRows(), sheet.getRows());
 

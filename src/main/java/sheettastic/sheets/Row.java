@@ -13,7 +13,7 @@ import java.util.*;
 public class Row {
     @NonNull
     private List<String> cells;
-
+    private boolean ignored;
 
     public Row() {
         cells = new LinkedList<>();

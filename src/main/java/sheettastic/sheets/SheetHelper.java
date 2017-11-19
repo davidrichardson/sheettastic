@@ -1,5 +1,6 @@
 package sheettastic.sheets;
 
+import javafx.scene.control.Cell;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -18,6 +19,8 @@ public class SheetHelper {
         sheet.removeEmptyRows();
         sheet.removeColumnsPastLastNonEmpty();
 
+        this.ignoreCommentLines(sheet);
+
         this.guessHeader(sheet);
 
         this.mapHeadings(sheet);
@@ -28,6 +31,31 @@ public class SheetHelper {
         Assert.isNull(sheet.getId());
         sheet.setId( UUID.randomUUID().toString() );
     }
+
+    public void ignoreCommentLines(Sheet sheet){
+        sheet.getRows().stream().filter(row -> isfirstCharHash(row)).forEach(row -> row.setIgnored(true));
+    }
+
+    private boolean isfirstCharHash(Row row) {
+        if (row == null) {
+            return false;
+        }
+
+        if (row.getCells() == null){
+            return false;
+        }
+
+        if (row.getCells().size() < 1){
+            return false;
+        }
+
+        String cellValue = row.getCells().get(0);
+        if (cellValue.startsWith("#")){
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * Picks a header row in the sheet

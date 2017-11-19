@@ -36,8 +36,24 @@ public class Sheet {
 
     @JsonIgnore
     public List<Row> getFirstRows(){
-        int limit = Math.min( 3 +headerRowIndex, rows.size());
-        return rows.subList(headerRowIndex+1,limit);
+        List<Row> sublist = new LinkedList<>();
+        ListIterator<Row> rowListIterator;
+
+        if (headerRowIndex == null){
+            rowListIterator = rows.listIterator(headerRowIndex);
+        }
+        else {
+            rowListIterator = rows.listIterator();
+        }
+
+        while (sublist.size() < 3 && rowListIterator.hasNext()){
+            Row row = rowListIterator.next();
+            if (!row.isIgnored()){
+                sublist.add(row);
+            }
+        }
+
+        return sublist;
     }
 
 
