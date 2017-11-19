@@ -19,10 +19,13 @@ public interface Capture {
     int map(int position, List<Capture> captures, List<String> headers);
 
     Capture copy();
+    String getDisplayName();
+    void setDisplayName(String displayName);
 
     default void setCaptureInList(int position, List<Capture> captures, String header){
         Capture cap = this;
         captures.set(position,cap);
+
     }
 
     List<String> expectedColumnHeaders();

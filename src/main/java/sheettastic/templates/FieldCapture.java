@@ -29,6 +29,8 @@ public class FieldCapture implements Capture {
     @Builder.Default
     private boolean required = false;
 
+    private String displayName;
+
     @Override
     public int capture(int position, List<String> headers, List<String> values, JSONObject document) {
         String value = values.get(position);
@@ -48,6 +50,6 @@ public class FieldCapture implements Capture {
 
     @Override
     public List<String> expectedColumnHeaders() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

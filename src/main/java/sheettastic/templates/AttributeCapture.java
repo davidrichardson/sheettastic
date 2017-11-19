@@ -19,6 +19,8 @@ public class AttributeCapture implements Capture {
         return this.toBuilder().build();
     }
 
+    private String displayName;
+
     private static final String ATTRIBUTES_FIELD_NAME = "attributes";
     private static final String UNITS_FIELD_NAME = "units";
     private static final String TERMS_FIELD_NAME = "terms";
@@ -49,10 +51,24 @@ public class AttributeCapture implements Capture {
             String header = headerIterator.next().trim().toLowerCase();
 
             if (allowUnits && header.toLowerCase().equals(UNITS_COLUMN_NAME)){
-                //next
+
+               NoOpCapture unitsCapture = NoOpCapture.builder()
+                       .displayName( this.getDisplayName().concat(" units") )
+                       .build();
+
+               unitsCapture.setCaptureInList(position,captures,header);
+
+
+
             }
             else if (allowTerms && header.toLowerCase().equals(TERMS_COLUMN_NAME)){
-                //next
+
+                NoOpCapture termsCapture = NoOpCapture.builder()
+                        .displayName( this.getDisplayName().concat(" ontology term") )
+                        .build();
+
+                termsCapture.setCaptureInList(position,captures,header);
+
             }
             else{
                 return position;

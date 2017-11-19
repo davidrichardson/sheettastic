@@ -85,6 +85,11 @@ public class SheetHelper {
      */
     public void mapHeadings(Sheet sheet){
         Map<String,Capture> columnCaptures = sheet.getTemplate().getColumnCaptures();
+        columnCaptures.entrySet().stream().forEach( entry ->
+                entry.getValue().setDisplayName( entry.getKey())
+        );
+
+
         Optional<Capture> defaultCapture = Optional.of(sheet.getTemplate().getDefaultCapture());
 
         if (sheet.getHeaderRowIndex() == null ) return;
@@ -107,11 +112,13 @@ public class SheetHelper {
             if (columnCaptures.containsKey(currentHeader)){
                 Capture capture = columnCaptures.get(currentHeader);
 
-
                 position = capture.map(position,capturePositions,headerRow);
             }
             else if (defaultCapture.isPresent()){
-                position = defaultCapture.get().map(position,capturePositions,headerRow);
+                Capture clonedCapture = defaultCapture.get().copy();
+                clonedCapture.setDisplayName(currentHeader);
+
+                position = clonedCapture.map(position,capturePositions,headerRow);
             }
             else {
                 position++;
