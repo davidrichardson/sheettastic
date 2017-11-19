@@ -34,6 +34,8 @@ public class Sheet {
     private List<Capture> mappings = new ArrayList<>();
     private String sheetName;
 
+    private int firstRowsLimit = 3;
+
     @JsonIgnore
     public List<Row> getFirstRows(){
         List<Row> sublist = new LinkedList<>();
@@ -46,7 +48,7 @@ public class Sheet {
             rowListIterator = rows.listIterator();
         }
 
-        while (sublist.size() < 3 && rowListIterator.hasNext()){
+        while (sublist.size() < this.firstRowsLimit && rowListIterator.hasNext()){
             Row row = rowListIterator.next();
             if (!row.isIgnored()){
                 sublist.add(row);
