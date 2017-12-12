@@ -136,7 +136,7 @@ public class SheetHelper {
 
         List<Row> rows = sheet.getRows();
 
-        List<Row> rowsToParse = rows.subList(sheet.getHeaderRowIndex()+1,rows.size() - 1);
+        List<Row> rowsToParse = rows.subList(sheet.getHeaderRowIndex()+1,rows.size());
 
 
         return rowsToParse.stream()
